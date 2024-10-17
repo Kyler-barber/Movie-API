@@ -40,32 +40,6 @@ Users
 - DELETE /users/:username/favorites/:title: Removes a movie from a user’s list of favorites.
 - DELETE /users/:email: Deregisters a user by email.
 
-Setup and Installation
-
-1. Clone the repository:
-   bash
-   git clone https://github.com/your-username/movie-api.git
-   
-   
-2. Navigate to the project directory:
-   bash
-   cd movie-api
-   
-
-3. Install the required dependencies:
-   bash
-   npm install
-   
-
-4. Set up the MongoDB database. You can use MongoDB Compass for an easy GUI experience or MongoDB Shell for command line management.
-
-5. Run the application:
-   bash
-   npm start
-   
-
-6. The API will run on `http://localhost:3000/`.
-
 Dependencies
 
 - Express.js: Web framework for Node.js
