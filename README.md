@@ -1,13 +1,11 @@
 Movie API
 
-About
-
 The Movie API is a simple and easy-to-use RESTful service that provides access to a variety of movie details like title, director, genre, and release year. This API is perfect for developers who want to pull movie data into their apps. The API also logs requests using `morgan`, so you can monitor usage and keep track of what’s being accessed.
 
 Features
 - Get movie details: Retrieve movie information such as title, genre, director, and release year.
 - User management: Register users and allow them to add/remove movies from their favorites list.
-- Logging: Uses `morgan` for request logging.
+- Logging: Uses morgan for request logging.
 - Middleware: Includes error handling middleware for graceful failure management.
 
 Technologies
@@ -17,6 +15,7 @@ Technologies
 - Express.js (REST framework)
 - Node.js
 - MongoDB and MongoDB Compass (for database management)
+- Mongoose (for schema-based MongoDB data modeling)
 - Morgan (for logging)
 
 API Endpoints
@@ -45,3 +44,4 @@ Dependencies
 - Express.js: Web framework for Node.js
 - Morgan: HTTP request logger middleware
 - MongoDB: NoSQL database for storing movie and user data
+- Mongoose: MongoDB object modeling tool to provide schema-based solutions for application data
