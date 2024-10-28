@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Documentation</title>
+    <title>Movie API Documentation</title>
     <style>
       table {
         width: 100%;
@@ -32,7 +32,9 @@
         <tr>
           <th>Request</th>
           <th>URL</th>
-          <th>Response</th>
+          <th>Request Method</th>
+          <th>Request Body (JSON)</th>
+          <th>Response Format (JSON)</th>
         </tr>
       </thead>
       <tbody>
@@ -40,26 +42,28 @@
         <tr>
           <td>GET</td>
           <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
           <td>
-            <p>Returns a list of all movies.</p>
-            <strong>URL:</strong> /movies<br />
-            <strong>Method Type:</strong> GET<br />
-            <strong>Query Parameters:</strong> None<br />
-            <strong>Request Body:</strong> None<br />
-            <strong>Response Format:</strong>
             <pre>
-                    [
-                      {
-                        "title": "The Shawshank Redemption",
-                        "year": 1994
-                      },
-                      {
-                        "title": "The Godfather",
-                        "year": 1972
-                      }
-                    ]
-                    </pre
-            >
+            [
+              {
+                "Title": "Inception",
+                "Description": "A mind-bending thriller...",
+                "Genre": {
+                  "Name": "Action",
+                  "Description": "Fast-paced scenes."
+                },
+                "Director": {
+                  "Name": "Christopher Nolan",
+                  "Bio": "Known for complex storytelling."
+                },
+                "Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+                "Featured": true
+              },
+              ...
+            ]
+            </pre>
           </td>
         </tr>
 
@@ -67,24 +71,25 @@
         <tr>
           <td>GET</td>
           <td>/movies/:title</td>
+          <td>GET</td>
+          <td>None</td>
           <td>
-            <p>Returns data about a single movie by title.</p>
-            <strong>URL:</strong> /movies/:title<br />
-            <strong>Method Type:</strong> GET<br />
-            <strong>Query Parameters:</strong> Title of the movie in the URL<br />
-            <strong>Request Body:</strong> None<br />
-            <strong>Response Format:</strong>
             <pre>
-                    {
-                      "title": "The Godfather",
-                      "description": "The aging patriarch of an organized crime dynasty...",
-                      "genre": "Crime",
-                      "director": "Francis Ford Coppola",
-                      "imageURL": "http://example.com/image.jpg",
-                      "featured": true
-                    }
-                    </pre
-            >
+            {
+              "Title": "Inception",
+              "Description": "A mind-bending thriller...",
+              "Genre": {
+                "Name": "Action",
+                "Description": "Fast-paced scenes."
+              },
+              "Director": {
+                "Name": "Christopher Nolan",
+                "Bio": "Known for complex storytelling."
+              },
+              "Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+              "Featured": true
+            }
+            </pre>
           </td>
         </tr>
 
@@ -92,20 +97,15 @@
         <tr>
           <td>GET</td>
           <td>/genres/:name</td>
+          <td>GET</td>
+          <td>None</td>
           <td>
-            <p>Returns a description of the genre by name.</p>
-            <strong>URL:</strong> /genres/:name<br />
-            <strong>Method Type:</strong> GET<br />
-            <strong>Query Parameters:</strong> Genre name in the URL<br />
-            <strong>Request Body:</strong> None<br />
-            <strong>Response Format:</strong>
             <pre>
-                    {
-                      "name": "Action",
-                      "description": "A genre with fast-paced scenes and high energy."
-                    }
-                    </pre
-            >
+            {
+              "Name": "Action",
+              "Description": "A genre with fast-paced scenes and high energy."
+            }
+            </pre>
           </td>
         </tr>
 
@@ -113,24 +113,17 @@
         <tr>
           <td>GET</td>
           <td>/directors/:name</td>
+          <td>GET</td>
+          <td>None</td>
           <td>
-            <p>
-              Returns the director's bio, birth year, and death year by name.
-            </p>
-            <strong>URL:</strong> /directors/:name<br />
-            <strong>Method Type:</strong> GET<br />
-            <strong>Query Parameters:</strong> Director name in the URL<br />
-            <strong>Request Body:</strong> None<br />
-            <strong>Response Format:</strong>
             <pre>
-                    {
-                      "name": "Francis Ford Coppola",
-                      "bio": "American film director and producer...",
-                      "birthYear": 1939,
-                      "deathYear": null
-                    }
-                    </pre
-            >
+            {
+              "Name": "Christopher Nolan",
+              "Bio": "Known for complex, nonlinear storytelling.",
+              "BirthYear": 1970,
+              "DeathYear": null
+            }
+            </pre>
           </td>
         </tr>
 
@@ -138,75 +131,111 @@
         <tr>
           <td>POST</td>
           <td>/users</td>
+          <td>POST</td>
           <td>
-            <p>Registers a new user.</p>
-            <strong>URL:</strong> /users<br />
-            <strong>Method Type:</strong> POST<br />
-            <strong>Request Body:</strong> JSON format:<br />
             <pre>
-                    {
-                      "username": "johnDoe",
-                      "email": "john@example.com"
-                    }
-                    </pre
-            >
-            <strong>Response Format:</strong>
+            {
+              "Username": "johnDoe",
+              "Password": "password123",
+              "Email": "john@example.com",
+              "Birthday": "1990-02-15"
+            }
+            </pre>
+          </td>
+          <td>
             <pre>
-                    {
-                      "message": "New user registered."
-                    }
-                    </pre
-            >
+            {
+              "_id": "60fddc7f8f1a2b7efb123456",
+              "Username": "johnDoe",
+              "Email": "john@example.com",
+              "Birthday": "1990-02-15",
+              "FavoriteMovies": []
+            }
+            </pre>
           </td>
         </tr>
 
-        <!-- PUT - Update Movie Description -->
+        <!-- Update User Info -->
         <tr>
           <td>PUT</td>
-          <td>/movies/:title/description</td>
+          <td>/users/:username</td>
+          <td>PUT</td>
           <td>
-            <p>Updates the description of a movie by title.</p>
-            <strong>URL:</strong> /movies/:title/description<br />
-            <strong>Method Type:</strong> PUT<br />
-            <strong>Request Body:</strong> JSON format:<br />
             <pre>
-                  {
-                    "description": "New movie description here."
-                  }
-                  </pre
-            >
-            <strong>Response Format:</strong>
+            {
+              "newUsername": "johnNew",
+              "Password": "newPassword123",
+              "Email": "johnNew@example.com",
+              "Birthday": "1990-02-15"
+            }
+            </pre>
+          </td>
+          <td>
             <pre>
-                  {
-                    "message": "Description updated for movie: title."
-                  }
-                  </pre
-            >
+            {
+              "_id": "60fddc7f8f1a2b7efb123456",
+              "Username": "johnNew",
+              "Email": "johnNew@example.com",
+              "Birthday": "1990-02-15",
+              "FavoriteMovies": []
+            }
+            </pre>
           </td>
         </tr>
 
-        <!-- PUT - Update Director Bio -->
+        <!-- Add Movie to Favorites -->
         <tr>
-          <td>PUT</td>
-          <td>/directors/:name/bio</td>
+          <td>POST</td>
+          <td>/users/:username/favorites</td>
+          <td>POST</td>
           <td>
-            <p>Updates the bio of a director for all movies by the director.</p>
-            <strong>URL:</strong> /directors/:name/bio<br />
-            <strong>Method Type:</strong> PUT<br />
-            <strong>Request Body:</strong> JSON format:<br />
             <pre>
-                  {
-                    "bio": "New director bio here."
-                  }
-                  </pre
-            >
-            <strong>Response Format:</strong>
+            {
+              "movieId": "60fddc7f8f1a2b7efb789abc"
+            }
+            </pre>
+          </td>
+          <td>
             <pre>
-                  {
-                    "message": "Bio updated for director: name."
-                  }
-                  </pre
-            >
+            {
+              "_id": "60fddc7f8f1a2b7efb123456",
+              "Username": "johnDoe",
+              "Email": "john@example.com",
+              "FavoriteMovies": ["60fddc7f8f1a2b7efb789abc"]
+            }
+            </pre>
+          </td>
+        </tr>
+
+        <!-- Remove Movie from Favorites -->
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:username/favorites/:movieId</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>
+            <pre>
+            {
+              "_id": "60fddc7f8f1a2b7efb123456",
+              "Username": "johnDoe",
+              "FavoriteMovies": []
+            }
+            </pre>
+          </td>
+        </tr>
+
+        <!-- Deregister a User -->
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:email</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>
+            <pre>
+            {
+              "message": "User with email john@example.com has been deleted."
+            }
+            </pre>
           </td>
         </tr>
       </tbody>
