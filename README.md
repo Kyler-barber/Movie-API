@@ -17,6 +17,19 @@ Technologies
 - MongoDB and MongoDB Compass (for database management)
 - Mongoose (for schema-based MongoDB data modeling)
 - Morgan (for logging)
+- Passport (Authentication middleware to handle secure user login sessions)
+- Passport local (Strategy for Passport support)
+- Passport JWT (handles JSON Web Tokens, used for secure, token-based user authentication)
+- jsonwebtoken (Library for creating and verifying JWTs)
+- Postman (Testing tool for simulating requests, checking API responses, and troubleshooting)
+
+Dependencies
+
+- Express.js: Web framework for Node.js
+- Morgan: HTTP request logger middleware
+- MongoDB: NoSQL database for storing movie and user data
+- Mongoose: MongoDB object modeling tool to provide schema-based solutions for application data
+
 
 API Endpoints
 
@@ -39,9 +52,3 @@ Users
 - DELETE /users/:username/favorites/:title: Removes a movie from a user’s list of favorites.
 - DELETE /users/:email: Deregisters a user by email.
 
-Dependencies
-
-- Express.js: Web framework for Node.js
-- Morgan: HTTP request logger middleware
-- MongoDB: NoSQL database for storing movie and user data
-- Mongoose: MongoDB object modeling tool to provide schema-based solutions for application data
