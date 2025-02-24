@@ -1,5 +1,5 @@
 // index.js
-require('dotenv').config({ path: './jwt.env' });
+require("dotenv").config({ path: "./jwt.env" });
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -7,7 +7,7 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Models = require("./models.js");
-const auth = require("./auth");
+const auth = require("./auth"); // Import auth routes as a router
 require("./passport");
 
 const app = express();
@@ -17,15 +17,19 @@ const Users = Models.User;
 const jwtSecret = process.env.JWT_SECRET;
 
 // Connect to MongoDB
-const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/your_database_name";
-mongoose.connect(mongoUri)
+const mongoUri =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/your_database_name";
+mongoose
+  .connect(mongoUri)
   .then(() => console.log("Connected to MongoDB successfully!"))
-  .catch(error => {
+  .catch((error) => {
     console.error("MongoDB connection error:", error);
     process.exit(1);
   });
 
 // Middleware
+const cors = require("cors");
+app.use(cors()); // Enable CORS for all routes
 app.use(morgan("common"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,38 +50,49 @@ async function hashPassword(plainPassword) {
 }
 
 // Public route: User registration without authentication
-app.post("/users", async (req, res) => {
-  const { username, password } = req.body;
+const { body, validationResult } = require("express-validator");
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "Username and password are required" });
-  }
-
-  try {
-    const existingUser = await Users.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: `${username} already exists` });
+app.post(
+  "/users",
+  [
+    body("username")
+      .isLength({ min: 5 })
+      .withMessage("Username must be at least 5 characters long"),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long"),
+    body("email").isEmail().withMessage("Invalid email format"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const hashedPassword = await hashPassword(password);
-    const user = await Users.create({
-      username,
-      password: hashedPassword,
-      email,
-      birthday,
-    });
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json({ message: "Error: " + error });
+    const { username, password, email, birthday } = req.body;
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await Users.create({
+        username,
+        password: hashedPassword,
+        email,
+        birthday,
+      });
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error: " + error });
+    }
   }
-});
+);
 
 // Public route: Login with JWT issuance
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Username and password are required" });
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
   }
 
   try {
@@ -86,19 +101,21 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch) {
-      const token = jwt.sign(
-        { _id: user._id, username: user.username },
-        jwtSecret,
-        { expiresIn: "1h" }
-      );
-      res.status(200).json({ message: "Login successful", token: "Bearer " + token });
-    } else {
-      res.status(400).json({ message: "Invalid username or password" });
+    const isMatch = await user.validatePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid username or password" });
     }
+
+    const token = jwt.sign(
+      { _id: user._id, username: user.username },
+      jwtSecret,
+      { expiresIn: "1h" }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Login successful", token: "Bearer " + token });
   } catch (error) {
-    console.error("Error during login process:", error);
     res.status(500).json({ message: "Error: " + error });
   }
 });
@@ -118,18 +135,6 @@ app.get(
   }
 );
 
-// Protected route: Example usage of generateHashedPassword
-async function generateHashedPassword(password) {
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed password:", hashedPassword);
-  } catch (error) {
-    console.error("Error generating hashed password:", error);
-  }
-}
-
-// Example usage of generateHashedPassword
-generateHashedPassword("testpassword");
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
